@@ -1,6 +1,6 @@
 {
   "name": "@percy/client",
-  "version": "1.12.0-addepar.1",
+  "version": "1.12.0-addepar.2",
   "license": "MIT",
   "repository": {
     "type": "git",
@@ -31,7 +31,7 @@
     "test:coverage": "yarn test --coverage"
   },
   "dependencies": {
-    "@percy/env": "https://github.com/Addepar/percy-cli/blob/v1.12_release/packs/percy-env-1.12.0-addepar.1.tgz?raw=true",
-    "@percy/logger": "https://github.com/Addepar/percy-cli/blob/v1.12_release/packs/percy-logger-1.12.0-addepar.1.tgz?raw=true"
+    "@percy/env": "https://github.com/Addepar/percy-cli/blob/v1.12_release/packs/percy-env-1.12.0-addepar.2.tgz?raw=true",
+    "@percy/logger": "https://github.com/Addepar/percy-cli/blob/v1.12_release/packs/percy-logger-1.12.0-addepar.2.tgz?raw=true"
   }
 }
