@@ -10,7 +10,7 @@ export function serializeCanvas(dom, clone) {
     if (!dataUrl || dataUrl === 'data:,') continue;
 
     // create an image element in the cloned dom
-    let img = dom.createElement('img');
+    let img = clone.createElement('img');
     img.src = dataUrl;
 
     // copy canvas element attributes to the image element such as style, class,

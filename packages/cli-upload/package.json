@@ -1,6 +1,6 @@
 {
   "name": "@percy/cli-upload",
-  "version": "1.12.0-addepar.2",
+  "version": "1.12.0-addepar.3",
   "license": "MIT",
   "repository": {
     "type": "git",
@@ -32,7 +32,7 @@
     ]
   },
   "dependencies": {
-    "@percy/cli-command": "https://github.com/Addepar/percy-cli/blob/v1.12_release/packs/percy-cli-command-1.12.0-addepar.2.tgz?raw=true",
+    "@percy/cli-command": "https://github.com/Addepar/percy-cli/blob/v1.12_release/packs/percy-cli-command-1.12.0-addepar.3.tgz?raw=true",
     "fast-glob": "^3.2.11",
     "image-size": "^1.0.0"
   }
