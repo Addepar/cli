@@ -1,6 +1,6 @@
 {
   "name": "@percy/core",
-  "version": "1.20.3",
+  "version": "1.20.3-addepar.0",
   "license": "MIT",
   "repository": {
     "type": "git",
@@ -39,10 +39,10 @@
     "test:types": "tsd"
   },
   "dependencies": {
-    "@percy/client": "1.20.3",
-    "@percy/config": "1.20.3",
-    "@percy/dom": "1.20.3",
-    "@percy/logger": "1.20.3",
+    "@percy/client": "https://github.com/Addepar/percy-cli/blob/fix_undefined_custom_elements/packs/percy-client-1.20.3-addepar.0.tgz?raw=true",
+    "@percy/config": "https://github.com/Addepar/percy-cli/blob/fix_undefined_custom_elements/packs/percy-config-1.20.3-addepar.0.tgz?raw=true",
+    "@percy/dom": "https://github.com/Addepar/percy-cli/blob/fix_undefined_custom_elements/packs/percy-dom-1.20.3-addepar.0.tgz?raw=true",
+    "@percy/logger": "https://github.com/Addepar/percy-cli/blob/fix_undefined_custom_elements/packs/percy-logger-1.20.3-addepar.0.tgz?raw=true",
     "content-disposition": "^0.5.4",
     "cross-spawn": "^7.0.3",
     "extract-zip": "^2.0.1",
