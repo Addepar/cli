@@ -15,6 +15,8 @@ import {
 // Default client API URL can be set with an env var for API development
 const { PERCY_CLIENT_API_URL = 'https://percy.io/api/v1' } = process.env;
 const pkg = getPackageJSON(import.meta.url);
+// minimum polling interval milliseconds
+const MIN_POLLING_INTERVAL = 1_000;
 
 // Validate ID arguments
 function validateId(type, id) {
@@ -195,8 +197,12 @@ export class PercyClient {
     project,
     commit,
     timeout = 10 * 60 * 1000,
-    interval = 1000
+    interval = 10_000
   }, onProgress) {
+    if (interval < MIN_POLLING_INTERVAL) {
+      this.log.warn(`Ignoring interval since it cannot be less than ${MIN_POLLING_INTERVAL}ms.`);
+      interval = MIN_POLLING_INTERVAL;
+    }
     if (!project && commit) {
       throw new Error('Missing project path for commit');
     } else if (!project && !build) {
@@ -366,8 +372,13 @@ export class PercyClient {
     this.log.debug(`Creating comparision: ${tag.name}...`);
 
     for (let tile of tiles) {
-      if (tile.sha || tile.content || !tile.filepath) continue;
-      tile.content = await fs.promises.readFile(tile.filepath);
+      if (tile.sha) continue;
+      if (tile.content && typeof tile.content === 'string') {
+        // base64 encoded content coming from SDK
+        tile.content = Buffer.from(tile.content, 'base64');
+      } else if (tile.filepath) {
+        tile.content = await fs.promises.readFile(tile.filepath);
+      }
     }
 
     return this.post(`snapshots/${snapshotId}/comparisons`, {
@@ -411,7 +422,7 @@ export class PercyClient {
   async uploadComparisonTile(comparisonId, { index = 0, total = 1, filepath, content, sha } = {}) {
     validateId('comparison', comparisonId);
     this.log.debug(`Uploading comparison tile: ${index + 1}/${total} (${comparisonId})...`);
-    if (filepath) content = await fs.promises.readFile(filepath);
+    if (filepath && !content) content = await fs.promises.readFile(filepath);
     if (sha) {
       return await this.verify(comparisonId, sha);
     }

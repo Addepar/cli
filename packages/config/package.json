@@ -1,6 +1,6 @@
 {
   "name": "@percy/config",
-  "version": "1.20.3-addepar.0",
+  "version": "1.22.0-addepar.0",
   "license": "MIT",
   "repository": {
     "type": "git",
@@ -34,7 +34,7 @@
     "test:types": "tsd"
   },
   "dependencies": {
-    "@percy/logger": "https://github.com/Addepar/percy-cli/blob/fix_undefined_custom_elements/packs/percy-logger-1.20.3-addepar.0.tgz?raw=true",
+    "@percy/logger": "https://github.com/Addepar/percy-cli/blob/fix_undefined_custom_elements/packs/percy-logger-1.22.0-addepar.0.tgz?raw=true",
     "ajv": "^8.6.2",
     "cosmiconfig": "^7.0.0",
     "yaml": "^2.0.0"

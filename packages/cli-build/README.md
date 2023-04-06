@@ -36,8 +36,9 @@ Options:
   -p, --project <slug>   Build project slug, requires '--commit'
   -c, --commit <sha>     Build commit sha, requires '--project'
   -t, --timeout <ms>     Timeout before exiting without updates, defaults to 10 minutes
-  -i, --interval <ms>    Interval at which to poll for updates, defaults to 1 second
+  -i, --interval <ms>    Interval at which to poll for updates, defaults to 10 second
   -f, --fail-on-changes  Exit with an error when diffs are found
+  --pass-if-approved     Doesn't Exit with an error if the build is approved, requires '--fail-on-changes'
 
 Global options:
   -v, --verbose          Log everything

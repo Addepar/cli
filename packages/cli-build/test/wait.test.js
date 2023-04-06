@@ -54,7 +54,7 @@ describe('percy build:wait', () => {
 
     await wait(['--project=foo/bar', '--commit=sha123', '--timeout=500', '--interval=50']);
 
-    expect(logger.stderr).toEqual([]);
+    expect(logger.stderr).toEqual(['[percy] Ignoring interval since it cannot be less than 1000ms.']);
     expect(logger.stdout).toEqual(jasmine.arrayContaining([
       '[percy] Waiting for build...'
     ]));
@@ -72,7 +72,7 @@ describe('percy build:wait', () => {
 
     await wait(['--build=123', '--interval=50']);
 
-    expect(logger.stderr).toEqual([]);
+    expect(logger.stderr).toEqual(['[percy] Ignoring interval since it cannot be less than 1000ms.']);
     expect(logger.stdout).toEqual(jasmine.arrayContaining([
       '[percy] Recieving snapshots...'
     ]));
@@ -95,7 +95,7 @@ describe('percy build:wait', () => {
 
     await wait(['--build=123', '--interval=50']);
 
-    expect(logger.stderr).toEqual([]);
+    expect(logger.stderr).toEqual(['[percy] Ignoring interval since it cannot be less than 1000ms.']);
     expect(logger.stdout).toEqual(jasmine.arrayContaining([
       '[percy] Processing 18 snapshots - 16 of 72 comparisons finished...',
       '[percy] Processing 18 snapshots - 32 of 72 comparisons finished...',
@@ -125,6 +125,54 @@ describe('percy build:wait', () => {
     })]);
 
     await expectAsync(wait(['--build=123', '-f'])).toBeRejected();
+
+    expect(logger.stderr).toEqual([]);
+    expect(logger.stdout).toEqual(jasmine.arrayContaining([
+      '[percy] Build #10 finished! https://percy.io/test/test/123',
+      '[percy] Found 16 changes'
+    ]));
+  });
+
+  it('errors on diffs if the pass-if-approved is on but diffs are unreviewed', async () => {
+    api.reply('/builds/123', () => [200, build({
+      'total-comparisons-diff': 16,
+      'review-state': 'unreviewed',
+      state: 'finished'
+    })]);
+
+    await expectAsync(wait(['--build=123', '-f', '--pass-if-approved'])).toBeRejected();
+
+    expect(logger.stderr).toEqual([]);
+    expect(logger.stdout).toEqual([
+      '[percy] Build #10 finished! https://percy.io/test/test/123',
+      '[percy] Found 16 changes'
+    ]);
+  });
+
+  it('errors on diffs if the pass-if-approved is on but diffs have changes requested', async () => {
+    api.reply('/builds/123', () => [200, build({
+      'total-comparisons-diff': 16,
+      'review-state': 'changes_requested',
+      state: 'finished'
+    })]);
+
+    await expectAsync(wait(['--build=123', '-f', '--pass-if-approved'])).toBeRejected();
+
+    expect(logger.stderr).toEqual([]);
+    expect(logger.stdout).toEqual([
+      '[percy] Build #10 finished! https://percy.io/test/test/123',
+      '[percy] Found 16 changes'
+    ]);
+  });
+
+  it('does not error on diffs if the review status is approved and pass-if-approved is on', async () => {
+    api.reply('/builds/123', () => [200, build({
+      'total-comparisons-diff': 16,
+      'review-state': 'approved',
+      state: 'finished'
+    })]);
+
+    await wait(['--build=123', '-f', '--pass-if-approved']);
 
     expect(logger.stderr).toEqual([]);
     expect(logger.stdout).toEqual(jasmine.arrayContaining([
@@ -270,6 +318,15 @@ describe('percy build:wait', () => {
       expect(logger.stderr).toEqual(jasmine.arrayContaining([
         '[percy] Build #10 failed! https://percy.io/test/test/123',
         '[percy] Error: unrecognized_reason'
+      ]));
+    });
+
+    it('logs an error if --pass-if-approved is provided without --fail-on-changes', async () => {
+      await expectAsync(wait(['--build=123', '--pass-if-approved'])).toBeRejected();
+
+      expect(logger.stdout).toEqual([]);
+      expect(logger.stderr).toEqual(jasmine.arrayContaining([
+        "[percy] ParseError: Options must be used together: '--pass-if-approved', '-f, --fail-on-changes'"
       ]));
     });
   });
